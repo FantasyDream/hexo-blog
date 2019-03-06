@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title><![CDATA[CentOS7安装RabbitMQ]]></title>
+    <url>%2F2019%2F03%2F06%2FCentOS7%E5%AE%89%E8%A3%85RabbitMQ%2F</url>
+    <content type="text"><![CDATA[下载https://www.lanzous.com/i2ym3xe 下载后解压出两个文件，传到服务器上 安装12yum install erlang-20.3.8.17-1.el6.x86_64.rpmyum installrabbitmq-server-3.7.10-1.el6.noarch.rpm 配置12345678910#开启web管理插件rabbitmq-plugins enable rabbitmq_management#启动服务service rabbitmq-server start#添加用户和删除guestrabbitmqctl add_user admin 123456abcrabbitmqctl set_user_tags admin administratorrabbitmqctl delete_user guestrabbitmqctl set_permissions -p "/" admin ".*" ".*" ".*" 验证浏览器访问 http://你的ip:15672 输入admin 123456abc 即可访问]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>rabbitmq</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Docker配置mysql主从复制]]></title>
+    <url>%2F2019%2F03%2F05%2FDocker%E9%85%8D%E7%BD%AEmysql%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%2F</url>
+    <content type="text"><![CDATA[1.创建文件夹和配置文件(1)创建主数据库文件夹及配置文件 12345678910111213141516171819mkdir /dockermkdir /docker/mysqlmkdir /docker/mysql/&#123;master,slave&#125;// 主库配置mkdir /docker/mysql/master/datamkdir /docker/mysql/master/mysql-filesvim /docker/mysql/master/my.cnf// 下面的内容填入my.cnf[mysqld]user=mysqllog-bin=mysql-binserver-id=11character-set-server=utf8default_authentication_plugin=mysql_native_passwordtable_definition_cache=400[client]default-character-set=utf8[mysql]default-character-set=utf8 (2)创建从数据库文件夹及配置文件 12345678910111213141516// 从库配置mkdir /docker/mysql/slave/datamkdir /docker/mysql/slave/mysql-filesvim /docker/mysql/slave/my.cnf// 下面的内容填入my.cnf[mysqld]user=mysqllog-bin=mysql-binserver-id=22character-set-server=utf8default_authentication_plugin=mysql_native_passwordtable_definition_cache=400[client]default-character-set=utf8[mysql]default-character-set=utf8 2.创建docker 桥接网络，用于MySQL主从容器之间互联1docker network create mysql 3.创建mysql容器12345//创建mysql主数据库容器docker run -d --privileged=true -p 3306:3306 -v /docker/mysql/master/my.cnf:/etc/mysql/my.cnf -v /docker/mysql/master/data:/var/lib/mysql -v /docker/mysql/master/mysql-files:/var/lib/mysql-files -e MYSQL_ROOT_PASSWORD=123456 --name mysql-master --network mysql --network-alias mysql-master mysql:latest// 创建mysql从数据库容器docker run -d --privileged=true -p 3307:3306 -v /docker/mysql/slave/my.cnf:/etc/mysql/my.cnf -v /docker/mysql/slave/data:/var/lib/mysql -v /docker/mysql/slave/mysql-files:/var/lib/mysql-files -e MYSQL_ROOT_PASSWORD=123456 --name mysql-slave --network mysql --network-alias mysql-slave mysql:latest 4.配置mysql主从复制(1)配置主服务器: 123456789101112131415161718192021docker exec -it mysql-master bashmysql -uroot -p// 输入密码// 我这里用root用户来进行主从复制,也可以自己创建新用户来替换掉// '%' 代表所有ip都能来复制,可以改成从自己的ip来提高安全性GRANT REPLICATION SLAVE ON *.* TO 'root'@'%';// 刷新权限flush privileges;// 查看主服务器状态show master status;// 记住其中的File Position 列的内容// 退出mysqlexit;// 退出mysql容器exit (2)配置从服务器: 12345678910111213// 进入MySQL从数据库容器docker exec -it mysql-slave bashmysql -uroot -p// 输入密码change master to master_host='mysql-master',master_user='root',master_password='123456',master_log_file='刚才记住的File列的内容',master_log_pos=position的内容(不用加引号),master_port=3306;// 启动slavestart slave;// 查看slave状态show slave status\G; 当 Slave_IO_Running , Slave_SQL_Running 都为yes时代表配置成功 5.验证去主库做一些操作,看看从库是否会同步更新,如果用的是一些图形化管理工具,记得点一下刷新 6.关于非docker环境下的主从复制配置只需不执行关于docker的命令就可]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+        <tag>mysql</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Redis主从搭建及配置]]></title>
+    <url>%2F2019%2F03%2F04%2FRedis%E4%B8%BB%E4%BB%8E%E6%90%AD%E5%BB%BA%E5%8F%8A%E9%85%8D%E7%BD%AE%2F</url>
+    <content type="text"><![CDATA[下载自己寻找要用的redis版本进行下载，我这边使用的是3.2.9版本 安装123456tar zxvf redis-3.2.9.tar.gzmkdir redismv redis-3.2.9 /usr/local/redismakemake installcd /usr/local/redis 配置1234vim /usr/local/redis/redis.conf# 修改如下配置daemonize yesprotectmode no 运行1234# 运行redis-serverbash /usr/local/redis/bin/redis-server ../redis.conf# 连接server，之后就能对redis进行存取bash /usr/local/redis/bin/redis-cli 主从12# 编辑 从redis 的服务器上的redis.confslaveof 主服务器ip 6379 在主服务器上插入一条数据，检查从服务器上有没有该数据几个检验是否配置成功 哨兵1234567891011121314151617vim /usr/local/redis/sentinel.conf# 配置如下信息sentinel monitor mymaster 主redis的ip 6379 2# 每个Sentinel节点都要定期PING命令来判断Redis数据节点和其余Sentinel节点是否可达，如果超过30000毫秒且没有回复，则判定不可达sentinel down-after-milliseconds mymaster 30000# 当Sentinel节点集合对主节点故障判定达成一致时，Sentinel领导者节点会做故障转移操作，选出新的主节点，原来的从节点会向新的主节点发起复制操作，限制每次向新的主节点发起复制操作的从节点个数为1sentinel parallel-syncs mymaster 1# 故障转移超时时间为180000毫秒sentinel failover-timeout mymaster 180000# 启动/usr/local/redis/bin/redis-sentinel ../sentinel.conf# 查看哨兵信息redis-cli -h 127.0.0.1 -p 26379 INFO Sentinel 在两台redis服务器上都配置一下哨兵，其中配置信息中的 mymaster可以当成集群名来使用，用于tomcat session共享]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>redis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[CentOS7安装Docker]]></title>
+    <url>%2F2019%2F03%2F04%2FCentOS7%E5%AE%89%E8%A3%85Docker%2F</url>
+    <content type="text"><![CDATA[一、安装docker1.检查内核版本​ Docker要求Linux系统的内核版本高与3.10，所以安装前通过命令检查内核版本, 命令如下 1uname -r 2.更新系统软件​ 更新系统依赖包，以便于Docker的安装 1sudo yum update 3.卸载旧版本docker​ 卸载掉旧版本，以免与新版本冲突 1sudo yum remove docker docker-common docker-selinux docker-engine 4.安装需要的软件包​ yum-util 提供yum-config-manager功能，另外两个是devicemapper驱动依赖的 1sudo yum install -y yum-utils device-mapper-persistent-data lvm2 5.设置docker的yum源​ 用于安装最新版docker 1sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo 6.安装docker1sudo yum install docker-ce 7.启动并加入开机启动12sudo systemctl start dockersudo systemctl enable docker 8.检查是否安装成功1docker version 二、Docker常用的一些命令123456789101112131415161718// 查看本地所有的镜像docker images// 搜索软件镜像docker search 你要搜索的软件镜像名// 下载软件镜像,不加版本号则默认为最新版docker pull 镜像名:版本号 // 将镜像启动为容器，部分参数在安装mysql时会解释docker run 镜像名或者镜像id// 容器的启动，停止，重启docker start/stop/restart 容器名或者容器id// 查看运行中的容器docker ps// 查看所有容器docker ps -a// 删除容器docker rm 容器名或者容器id// 删除镜像docker rmi 镜像id 容器与镜像的关系： 镜像类似与oop中的类，而容器的类似与对象，一个镜像可以启动多个容器，只要容器名和映射端口号不同 三、Docker安装常用的开发软件下面的安装基本都将软件的数据和配置放到主机上，便于修改配置和备份 1.安装mysql（1）创建目录用于存储mysql的文件和配置 123456789101112131415mkdir /dockermkdir /docker/mysqlmkdir /docker/mysql/datamkdir /docker/mysql/mysql-files //安装mysql8.0才需要这个文件夹，5.7不需要vim /docker/mysql/my.cnf//下面的内容输入到my.cnf中[mysqld]user=mysqlcharacter-set-server=utf8default_authentication_plugin=mysql_native_passwordtable_definition_cache=400[client]default-character-set=utf8[mysql]default-character-set=utf8 （2） 安装最新版MySQL 1docker run -d --privileged=true -p 3306:3306 -v /docker/mysql/my.cnf:/etc/mysql/my.cnf -v /docker/mysql/data:/var/lib/mysql -v /docker/mysql/mysql-files:/var/lib/mysql-files -e MYSQL_ROOT_PASSWORD=yourpassword --name mysql mysql:latest 这样mysql最新版的docker容器就安装成功了。 （3）若想要自定义安装版本，可以这样 12docker pull mysql:5.7 //5.7可替换为自己想要的版本docker run -d --privileged=true -p 3306:3306 -v /docker/mysql/my.cnf:/etc/mysql/my.cnf -v /docker/mysql/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=yourpassword --name mysql mysql:5.7 （4）run部分命令参数解释 12345-d // 以守护进程方式运行-privileged=true // 让docker容器的内部root用户拥有真正的root权限-p // 映射端口号-v // 映射容器内的文件夹到宿主机的文件夹--name //给容器取名 （5）进入容器内部操作 12345docker exec -it mysql bash // mysql为镜像名，bash为进去要操作的见面mysql -u root -p // 输入你设置的密码// 即可进入数据库// 也可以直接使用navicat等工具进行连接，记得ip填写你的服务器公网ip 2.安装redis（1）创建文件夹存储redis 的配置文件和持久化数据 123456789mkdir /docker/redismkdir /docker/redis/datawget https://raw.githubusercontent.com/antirez/redis/4.0/redis.conf -O /docker/redis/redis.confvim /docker/redis/redis.conf// 将"logfile "" " 改为 "logfile "access.log" "// 将"bind 127.0.0.1" 改为 "# bind 127.0.0.1"// 将"appendonly no" 改为 "appendonly yes" // 将"# requirepass foobared" 改为 "requirepass 你的密码"// 修改后即可开启远程连接和密码验证 （2）安装最新版redis 1docker run -d --privileged=true -p 6379:6379 -v /docker/redis/redis.conf:/etc/redis/redis.conf -v /docker/redis/data:/data --name redis redis:latest redis-server /etc/redis/redis.conf （3） 进入容器内部操作 1234567//进入容器内部docker exec -it redis bash// 连接redisredis-cli -h 127.0.0.1 -p 6379 -a 你的密码 // 测试ping// 返回 pong 就成功了 3.安装rabbitmq（1）同样，先创建文件夹用于将rabbitmq的数据放到主机上 123mkdir /docker/rabbitmqmkdir /docker/rabbitmq/datawget https://raw.githubusercontent.com/rabbitmq/rabbitmq-server/master/docs/rabbitmq.conf.example -O /docker/rabbitmq/rabbitmq.conf （2）安装rabbitmq，安装的是3.7.8的rabbitmq的带web管理界面的版本，是目前为止的最新版 1docker run -d --privileged=true -p 15672:15672 -p 5672:5672 -v /docker/rabbitmq/data:/var/rabbitmq/lib -v /docker/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf --name rabbitmq rabbitmq:3.7.8-management （3）进入rabbitmq容器中增加一个管理员用户，因为guest用户在默认配置下不能用外部ip登陆 1234docker exec -it rabbitmq bash# 这里的admin可以替换成你的用户名和密码rabbitmqctl add_user admin adminrabbitmqctl set_user_tags admin administrator （4）用web界面配置 打开浏览器， 输入http://你的ip:15672，输入用户名和密码，进去后可以添加用户和设置权限 4.安装mongo（1）还是创建文件夹 12mkdir /docker/mongomkdir /docker/mongo/data （2）安装最新版mongodb 1docker run -d --privileged=true -p 27017:27017 -v /docker/mongo/data:/data/db --name mongo mongo:latest （3）进入mongo容器，进行简单设置 12345docker exec -it mongo bashmongouse admindb.createUser(&#123; user: 'root', pwd: '你的密码', roles: [ &#123; role: "userAdminAnyDatabase", db: "admin" &#125; ] &#125;)//之后即可在连接工具输入相应参数连接 5.安装zookeeper（1）创建文件夹和配置文件 12345678910111213mkdir /docker/zookeepermkdir /docker/zookeeper/datavim /docker/zookeeper/zoo.cfg//将下面的内容输入到文件中clientPort=2181dataDir=/datadataLogDir=/datalogtickTime=2000initLimit=5syncLimit=2autopurge.snapRetainCount=3autopurge.purgeInterval=0maxClientCnxns=60 （2）安装zookeeper 1docker run -d --privileged=true -p 2181:2181 -v /docker/zookeeper/zoo.cfg:/conf/zoo.cfg -v /docker/zookeeper/data:/data --name zookeeper zookeeper:latest]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+        <tag>mysql</tag>
+        <tag>rabbitmq</tag>
+        <tag>redis</tag>
+        <tag>zookeeper</tag>
+      </tags>
+  </entry>
+</search>
