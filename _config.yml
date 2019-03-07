@@ -87,3 +87,19 @@ search:
   field: post
   format: html
   limit: 10000
+
+symbols_count_time:
+ #文章内是否显示
+  symbols: true
+  time: true
+ # 网页底部是否显示
+  total_symbols: true
+  total_time: true
+
+# hexo-tag-cloud
+tag_cloud:
+    textFont: Trebuchet MS, Helvetica
+    textColor: '#333'
+    textHeight: 30
+    outlineColor: '#E2E1D1'
+    maxSpeed: 0.5
