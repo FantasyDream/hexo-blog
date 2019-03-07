@@ -78,9 +78,12 @@ theme: next
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
-  type: git
-  repo: https://github.com/FantasyDream/fantasydream.github.io.git
-  branch: master
+  - type: git
+    repo: https://github.com/FantasyDream/fantasydream.github.io.git
+    branch: master
+  - type: git
+    repo: https://gitee.com/fandre/fandre.git
+    branch: master
 
 search:
   path: search.xml
