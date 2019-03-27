@@ -18,7 +18,7 @@ description: docker与微服务的相性让他们两个都发展迅速，现在�
 
 ### 1.检查内核版本
 
-​    Docker要求Linux系统的内核版本高与3.10，所以安装前通过命令检查内核版本, 命令如下
+​    Docker要求Linux系统的内核版本高于3.10，所以安装前通过命令检查内核版本, 命令如下
 
 ``` shell
 uname -r 
@@ -36,7 +36,7 @@ sudo yum update
 
 ​    卸载掉旧版本，以免与新版本冲突
 
-```shell
+``` shell
 sudo yum remove docker  docker-common docker-selinux docker-engine
 ```
 
@@ -110,13 +110,19 @@ docker rmi 镜像id
 
 （1）创建目录用于存储mysql的文件和配置
 
+创建文件夹
 ```shell
 mkdir /docker
 mkdir /docker/mysql
 mkdir /docker/mysql/data
 mkdir /docker/mysql/mysql-files //安装mysql8.0才需要这个文件夹，5.7不需要
+```
+创建配置文件
+```shell
 vim /docker/mysql/my.cnf
-//下面的内容输入到my.cnf中
+```
+编辑配置文件
+``` shell
 [mysqld]
 user=mysql
 character-set-server=utf8
