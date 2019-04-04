@@ -79,10 +79,7 @@ theme: next
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   - type: git
-    repo: https://github.com/FantasyDream/fantasydream.github.io.git
-    branch: master
-  - type: git
-    repo: https://git.dev.tencent.com/FantasyDream/test.git
+    repo: https://git.dev.tencent.com/FantasyDream/fantasydream.coding.me.git
     branch: master
 
 search:
