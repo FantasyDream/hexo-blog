@@ -82,7 +82,7 @@ deploy:
     repo: https://github.com/FantasyDream/fantasydream.github.io.git
     branch: master
   - type: git
-    repo: https://gitee.com/fandre/fandre.git
+    repo: https://git.dev.tencent.com/FantasyDream/test.git
     branch: master
 
 search:
