@@ -12,7 +12,6 @@ author: fantasydream
 date: 2019-03-4 10:37:00
 description: docker与微服务的相性让他们两个都发展迅速，现在大部分公司都会用docker来部署他们的微服务。而在服务器端，通常公司都会用centos而不是ubuntu，docker在centos上安装是没有Ubuntu便捷的，所以本文就记录一下docker在centos上的安装，以及一些常用软件在docker上的安装，其中在部署软件时，会将数据及配置文件移动到容器外，以方便修改和保存数据。
 ---
-![](https://ws1.sinaimg.cn/large/006WmYZrgy1g0s0ipooj5j30l10eyq6i.jpg)
 
 ## 一、安装docker
 
@@ -100,7 +99,7 @@ docker rmi 镜像id
 
 容器与镜像的关系：
 
-镜像类似与oop中的类，而容器的类似与对象，一个镜像可以启动多个容器，只要容器名和映射端口号不同
+镜像类似于oop中的类，而容器类似于对象，一个镜像可以在一台机器上启动多个容器，只要容器名和映射端口号不同
 
 ## 三、Docker安装常用的开发软件
 

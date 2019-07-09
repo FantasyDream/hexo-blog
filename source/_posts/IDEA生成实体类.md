@@ -3,7 +3,7 @@ title: IDEA编写groovy脚本生成实体类
 author: fantasydream
 date: 2019-03-30 13:14:20
 tags:
- -Java
+ - Java
 categories: Java
 description: mybatis是我们开发中比较常用的orm框架，但它不像hibernate那样可以直接从数据库生成实体类，只能借助mybatis-generator这样的工具，还是有些不方便的。虽然IDEA的数据库工具可以生成实体类，但并不符合我们的需求，例如字段的属性都是基本类型，而不是包装类型，package是固定的等。而IDEA的生成工具使用groovy编写的脚本，并且能看到源码，这为我们编写自己的实体生成工具提供了摸板。
 ---
@@ -12,13 +12,11 @@ description: mybatis是我们开发中比较常用的orm框架，但它不像hib
 
 ### 1.点击idea右侧的数据库工具,并点击 + 号
 
-![](https://ws1.sinaimg.cn/large/006WmYZrly1g1ks36ivbmj309d0edglr.jpg)
+![](http://image.fantasydream.top/20190709091217.png)
 
 ### 2.选择mysql并在弹出的窗口中填写数据库连接信息
 
-
-
-![](https://ws1.sinaimg.cn/large/006WmYZrly1g1ks3h3sgjj30m80hzgmo.jpg)
+![](http://image.fantasydream.top/20190709091234.png)
 
 ## 二、编写脚本
 
@@ -26,7 +24,7 @@ description: mybatis是我们开发中比较常用的orm框架，但它不像hib
 
 在右侧数据库中随便右击一张表，按途中所示点击，点击后左侧项目会有一个高亮目录
 
-![](https://ws1.sinaimg.cn/large/006WmYZrly1g1ks424kz3j30c90co0t7.jpg)
+![](http://image.fantasydream.top/20190709091303.png)
 
 ### 2.编写我们自己的groovy脚本
 
@@ -188,9 +186,9 @@ static String genSerialID() {
 
 此时再次右击表，就可看到我们的脚本了
 
-![](https://ws1.sinaimg.cn/large/006WmYZrly1g1krn0hzsyj30cm0bz0t5.jpg)
+![](http://image.fantasydream.top/20190709091337.png)
 
 生成的效果如下
 
-![](https://ws1.sinaimg.cn/large/006WmYZrly1g1ks4buf8mj30kp0nzdgv.jpg)
+![](http://image.fantasydream.top/20190709091402.png)
 
