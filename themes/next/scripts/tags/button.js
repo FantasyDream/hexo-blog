@@ -1,5 +1,5 @@
 /**
- * button.js | https://theme-next.org/docs/tag-plugins/button/
+ * button.js | https://theme-next.org/docs/tag-plugins/button
  */
 
 /* global hexo */
@@ -14,7 +14,7 @@ function postButton(args) {
   var title = args[3] || '';
 
   if (!url) {
-    hexo.log.warn('URL can NOT be empty');
+    hexo.log.warn('URL can NOT be empty.');
   }
 
   text = text.trim();

@@ -1,9 +1,20 @@
-.header-inner, .container .main-inner, .footer-inner {
-  +mobile() { width: auto; }
+.header-inner, .main-inner, .footer-inner {
+  +mobile() {
+    width: auto;
+  }
 }
 
-// embed tag
+.header-inner {
+  +mobile() {
+    padding: 50px 0 35px;
+  }
+}
+
+.main-inner {
+  padding-bottom: 60px;
+}
+
 embed {
-   display: block;
-   margin:  0px auto 25px auto;
+  display: block;
+  margin: 0 auto 25px auto;
 }
