@@ -88,7 +88,7 @@ theme: next
 
 deploy:
   type: git
-  repo: https://git.dev.tencent.com/FantasyDream/fantasydream.coding.me.git
+  repo: https://e.coding.net/FantasyDream/fantasydream.coding.me.git
   branch: master
 
 search:
