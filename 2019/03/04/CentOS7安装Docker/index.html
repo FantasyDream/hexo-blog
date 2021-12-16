@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.fantasydream.top","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.8.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="docker与微服务的相性让他们两个都发展迅速，现在大部分公司都会用docker来部署他们的微服务。而在服务器端，通常公司都会用centos而不是ubuntu，docker在centos上安装是没有Ubuntu便捷的，所以本文就记录一下docker在centos上的安装，以及一些常用软件在docker上的安装，其中在部署软件时，会将数据及配置文件移动到容器外，以方便修改和保存数据。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS7 安装 Docker">
+<meta property="og:url" content="https://blog.fantasydream.top/2019/03/04/CentOS7%E5%AE%89%E8%A3%85Docker/index.html">
+<meta property="og:site_name" content="Nier&#39;s Note">
+<meta property="og:description" content="docker与微服务的相性让他们两个都发展迅速，现在大部分公司都会用docker来部署他们的微服务。而在服务器端，通常公司都会用centos而不是ubuntu，docker在centos上安装是没有Ubuntu便捷的，所以本文就记录一下docker在centos上的安装，以及一些常用软件在docker上的安装，其中在部署软件时，会将数据及配置文件移动到容器外，以方便修改和保存数据。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-03-04T02:37:00.000Z">
+<meta property="article:modified_time" content="2020-11-24T05:12:45.352Z">
+<meta property="article:author" content="Dreamer">
+<meta property="article:tag" content="docker">
+<meta property="article:tag" content="mysql">
+<meta property="article:tag" content="rabbitmq">
+<meta property="article:tag" content="redis">
+<meta property="article:tag" content="zookeeper">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.fantasydream.top/2019/03/04/CentOS7%E5%AE%89%E8%A3%85Docker/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.fantasydream.top/2019/03/04/CentOS7%E5%AE%89%E8%A3%85Docker/","path":"2019/03/04/CentOS7安装Docker/","title":"CentOS7 安装 Docker"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>CentOS7 安装 Docker | Nier's Note</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Nier's Note</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">For the Glory of Mankind</p>
+      <img class="custom-logo-image" src="/uploads/nier.png" alt="Nier's Note">
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AE%89%E8%A3%85docker"><span class="nav-number">1.</span> <span class="nav-text">一、安装 docker</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%A3%80%E6%9F%A5%E5%86%85%E6%A0%B8%E7%89%88%E6%9C%AC"><span class="nav-number">1.1.</span> <span class="nav-text">1. 检查内核版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%9B%B4%E6%96%B0%E7%B3%BB%E7%BB%9F%E8%BD%AF%E4%BB%B6"><span class="nav-number">1.2.</span> <span class="nav-text">2. 更新系统软件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%8D%B8%E8%BD%BD%E6%97%A7%E7%89%88%E6%9C%ACdocker"><span class="nav-number">1.3.</span> <span class="nav-text">3. 卸载旧版本 docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%AE%89%E8%A3%85%E9%9C%80%E8%A6%81%E7%9A%84%E8%BD%AF%E4%BB%B6%E5%8C%85"><span class="nav-number">1.4.</span> <span class="nav-text">4. 安装需要的软件包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E8%AE%BE%E7%BD%AEdocker%E7%9A%84yum%E6%BA%90"><span class="nav-number">1.5.</span> <span class="nav-text">5. 设置 docker 的 yum 源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E5%AE%89%E8%A3%85docker"><span class="nav-number">1.6.</span> <span class="nav-text">6. 安装 docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E5%90%AF%E5%8A%A8%E5%B9%B6%E5%8A%A0%E5%85%A5%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8"><span class="nav-number">1.7.</span> <span class="nav-text">7. 启动并加入开机启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E6%A3%80%E6%9F%A5%E6%98%AF%E5%90%A6%E5%AE%89%E8%A3%85%E6%88%90%E5%8A%9F"><span class="nav-number">1.8.</span> <span class="nav-text">8. 检查是否安装成功</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81Docker%E5%B8%B8%E7%94%A8%E7%9A%84%E4%B8%80%E4%BA%9B%E5%91%BD%E4%BB%A4"><span class="nav-number">2.</span> <span class="nav-text">二、Docker 常用的一些命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81Docker%E5%AE%89%E8%A3%85%E5%B8%B8%E7%94%A8%E7%9A%84%E5%BC%80%E5%8F%91%E8%BD%AF%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">三、Docker 安装常用的开发软件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%AE%89%E8%A3%85mysql"><span class="nav-number">3.1.</span> <span class="nav-text">1. 安装 mysql</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%AE%89%E8%A3%85redis"><span class="nav-number">3.2.</span> <span class="nav-text">2. 安装 redis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%AE%89%E8%A3%85rabbitmq"><span class="nav-number">3.3.</span> <span class="nav-text">3. 安装 rabbitmq</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%AE%89%E8%A3%85mongo"><span class="nav-number">3.4.</span> <span class="nav-text">4. 安装 mongo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%AE%89%E8%A3%85zookeeper"><span class="nav-number">3.5.</span> <span class="nav-text">5. 安装 zookeeper</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dreamer"
+      src="/uploads/me.jpg">
+  <p class="site-author-name" itemprop="name">Dreamer</p>
+  <div class="site-description" itemprop="description">Constant dropping wears the stone.</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.fantasydream.top/2019/03/04/CentOS7%E5%AE%89%E8%A3%85Docker/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.jpg">
+      <meta itemprop="name" content="Dreamer">
+      <meta itemprop="description" content="Constant dropping wears the stone.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nier's Note">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CentOS7 安装 Docker
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-03-04 10:37:00" itemprop="dateCreated datePublished" datetime="2019-03-04T10:37:00+08:00">2019-03-04</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-11-24 13:12:45" itemprop="dateModified" datetime="2020-11-24T13:12:45+08:00">2020-11-24</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">docker与微服务的相性让他们两个都发展迅速，现在大部分公司都会用docker来部署他们的微服务。而在服务器端，通常公司都会用centos而不是ubuntu，docker在centos上安装是没有Ubuntu便捷的，所以本文就记录一下docker在centos上的安装，以及一些常用软件在docker上的安装，其中在部署软件时，会将数据及配置文件移动到容器外，以方便修改和保存数据。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="一、安装docker"><a href="#一、安装docker" class="headerlink" title="一、安装docker"></a>一、安装 docker</h2><h3 id="1-检查内核版本"><a href="#1-检查内核版本" class="headerlink" title="1.检查内核版本"></a>1. 检查内核版本</h3><p>​    Docker 要求 Linux 系统的内核版本高于 3.10，所以安装前通过命令检查内核版本，命令如下</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname -r </span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="2-更新系统软件"><a href="#2-更新系统软件" class="headerlink" title="2.更新系统软件"></a>2. 更新系统软件</h3><p>​    更新系统依赖包，以便于 Docker 的安装</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum update </span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="3-卸载旧版本docker"><a href="#3-卸载旧版本docker" class="headerlink" title="3.卸载旧版本docker"></a>3. 卸载旧版本 docker</h3><p>​    卸载掉旧版本，以免与新版本冲突</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum remove docker  docker-common docker-selinux docker-engine</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="4-安装需要的软件包"><a href="#4-安装需要的软件包" class="headerlink" title="4.安装需要的软件包"></a>4. 安装需要的软件包</h3><p>​    yum-util 提供 yum-config-manager 功能，另外两个是 devicemapper 驱动依赖的</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y yum-utils device-mapper-persistent-data lvm2</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="5-设置docker的yum源"><a href="#5-设置docker的yum源" class="headerlink" title="5.设置docker的yum源"></a>5. 设置 docker 的 yum 源</h3><p>​    用于安装最新版 docker</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="6-安装docker"><a href="#6-安装docker" class="headerlink" title="6.安装docker"></a>6. 安装 docker</h3><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install docker-ce</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="7-启动并加入开机启动"><a href="#7-启动并加入开机启动" class="headerlink" title="7.启动并加入开机启动"></a>7. 启动并加入开机启动</h3><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start docker</span><br><span class="line">sudo systemctl enable docker</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="8-检查是否安装成功"><a href="#8-检查是否安装成功" class="headerlink" title="8.检查是否安装成功"></a>8. 检查是否安装成功</h3><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker version</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="二、Docker常用的一些命令"><a href="#二、Docker常用的一些命令" class="headerlink" title="二、Docker常用的一些命令"></a>二、Docker 常用的一些命令</h2><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// 查看本地所有的镜像</span><br><span class="line">docker images</span><br><span class="line">// 搜索软件镜像</span><br><span class="line">docker search 你要搜索的软件镜像名</span><br><span class="line">// 下载软件镜像,不加版本号则默认为最新版</span><br><span class="line">docker pull 镜像名:版本号 </span><br><span class="line">// 将镜像启动为容器，部分参数在安装mysql时会解释</span><br><span class="line">docker run 镜像名或者镜像id</span><br><span class="line">// 容器的启动，停止，重启</span><br><span class="line">docker start/stop/restart 容器名或者容器id</span><br><span class="line">// 查看运行中的容器</span><br><span class="line">docker ps</span><br><span class="line">// 查看所有容器</span><br><span class="line">docker ps -a</span><br><span class="line">// 删除容器</span><br><span class="line">docker rm 容器名或者容器id</span><br><span class="line">// 删除镜像</span><br><span class="line">docker rmi 镜像id</span><br></pre></td></tr></tbody></table></figure>
+
+<p>容器与镜像的关系：</p>
+<p>镜像类似于 oop 中的类，而容器类似于对象，一个镜像可以在一台机器上启动多个容器，只要容器名和映射端口号不同</p>
+<h2 id="三、Docker安装常用的开发软件"><a href="#三、Docker安装常用的开发软件" class="headerlink" title="三、Docker安装常用的开发软件"></a>三、Docker 安装常用的开发软件</h2><p>下面的安装基本都将软件的数据和配置放到主机上，便于修改配置和备份</p>
+<h3 id="1-安装mysql"><a href="#1-安装mysql" class="headerlink" title="1.安装mysql"></a>1. 安装 mysql</h3><p>（1）创建目录用于存储 mysql 的文件和配置</p>
+<p>创建文件夹</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir /docker</span><br><span class="line">mkdir /docker/mysql</span><br><span class="line">mkdir /docker/mysql/data</span><br><span class="line">mkdir /docker/mysql/mysql-files //安装mysql8.0才需要这个文件夹，5.7不需要</span><br></pre></td></tr></tbody></table></figure>
+<p>创建配置文件</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /docker/mysql/my.cnf</span><br></pre></td></tr></tbody></table></figure>
+<p>编辑配置文件</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">user=mysql</span><br><span class="line">character-set-server=utf8</span><br><span class="line">default_authentication_plugin=mysql_native_password</span><br><span class="line">table_definition_cache=400</span><br><span class="line">[client]</span><br><span class="line">default-character-set=utf8</span><br><span class="line">[mysql]</span><br><span class="line">default-character-set=utf8</span><br></pre></td></tr></tbody></table></figure>
+
+<p>（2） 安装最新版 MySQL</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --privileged=true -p 3306:3306 -v /docker/mysql/my.cnf:/etc/mysql/my.cnf -v /docker/mysql/data:/var/lib/mysql -v /docker/mysql/mysql-files:/var/lib/mysql-files -e MYSQL_ROOT_PASSWORD=yourpassword --name mysql mysql:latest</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这样 mysql 最新版的 docker 容器就安装成功了。</p>
+<p>（3）若想要自定义安装版本，可以这样</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker pull mysql:5.7 //5.7可替换为自己想要的版本</span><br><span class="line">docker run -d --privileged=true -p 3306:3306 -v /docker/mysql/my.cnf:/etc/mysql/my.cnf -v /docker/mysql/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=yourpassword --name mysql mysql:5.7</span><br></pre></td></tr></tbody></table></figure>
+
+<p>（4）run 部分命令参数解释</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-d // 以守护进程方式运行</span><br><span class="line">-privileged=true // 让docker容器的内部root用户拥有真正的root权限</span><br><span class="line">-p // 映射端口号</span><br><span class="line">-v // 映射容器内的文件夹到宿主机的文件夹</span><br><span class="line">--name //给容器取名</span><br></pre></td></tr></tbody></table></figure>
+
+<p>（5）进入容器内部操作</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it mysql bash // mysql为镜像名，bash为进去要操作的见面</span><br><span class="line">mysql -u root -p </span><br><span class="line">// 输入你设置的密码</span><br><span class="line">// 即可进入数据库</span><br><span class="line">// 也可以直接使用navicat等工具进行连接，记得ip填写你的服务器公网ip</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="2-安装redis"><a href="#2-安装redis" class="headerlink" title="2.安装redis"></a>2. 安装 redis</h3><p>（1）创建文件夹存储 redis 的配置文件和持久化数据</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mkdir /docker/redis</span><br><span class="line">mkdir /docker/redis/data</span><br><span class="line">wget https://raw.githubusercontent.com/antirez/redis/4.0/redis.conf -O /docker/redis/redis.conf</span><br><span class="line">vim /docker/redis/redis.conf</span><br><span class="line">// 将"logfile "" " 改为 "logfile "access.log" "</span><br><span class="line">// 将"bind 127.0.0.1" 改为 "# bind 127.0.0.1"</span><br><span class="line">// 将"appendonly no" 改为 "appendonly yes" </span><br><span class="line">// 将"# requirepass foobared" 改为 "requirepass 你的密码"</span><br><span class="line">// 修改后即可开启远程连接和密码验证</span><br></pre></td></tr></tbody></table></figure>
+
+<p>（2）安装最新版 redis</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --privileged=true -p 6379:6379 -v /docker/redis/redis.conf:/etc/redis/redis.conf -v /docker/redis/data:/data --name redis redis:latest redis-server /etc/redis/redis.conf</span><br></pre></td></tr></tbody></table></figure>
+
+<p>（3） 进入容器内部操作</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//进入容器内部</span><br><span class="line">docker exec -it redis bash</span><br><span class="line">// 连接redis</span><br><span class="line">redis-cli -h 127.0.0.1 -p 6379 -a 你的密码 </span><br><span class="line">// 测试</span><br><span class="line">ping</span><br><span class="line">// 返回 pong 就成功了</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="3-安装rabbitmq"><a href="#3-安装rabbitmq" class="headerlink" title="3.安装rabbitmq"></a>3. 安装 rabbitmq</h3><p>（1）同样，先创建文件夹用于将 rabbitmq 的数据放到主机上</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir /docker/rabbitmq</span><br><span class="line">mkdir /docker/rabbitmq/data</span><br><span class="line">wget https://raw.githubusercontent.com/rabbitmq/rabbitmq-server/master/docs/rabbitmq.conf.example -O /docker/rabbitmq/rabbitmq.conf</span><br></pre></td></tr></tbody></table></figure>
+
+<p>（2）安装 rabbitmq，安装的是 3.7.8 的 rabbitmq 的带 web 管理界面的版本，是目前为止的最新版</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --privileged=true -p 15672:15672 -p 5672:5672 -v /docker/rabbitmq/data:/var/rabbitmq/lib -v /docker/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf --name rabbitmq rabbitmq:3.7.8-management</span><br></pre></td></tr></tbody></table></figure>
+
+<p>（3）进入 rabbitmq 容器中增加一个管理员用户，因为 guest 用户在默认配置下不能用外部 ip 登陆</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it rabbitmq bash</span><br><span class="line"><span class="meta">#</span><span class="bash"> 这里的admin可以替换成你的用户名和密码</span></span><br><span class="line">rabbitmqctl add_user admin admin</span><br><span class="line">rabbitmqctl set_user_tags admin administrator</span><br></pre></td></tr></tbody></table></figure>
+
+<p>（4）用 web 界面配置</p>
+<p>打开浏览器， 输入 http:// 你的 ip:15672，输入用户名和密码，进去后可以添加用户和设置权限</p>
+<h3 id="4-安装mongo"><a href="#4-安装mongo" class="headerlink" title="4.安装mongo"></a>4. 安装 mongo</h3><p>（1）还是创建文件夹</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir /docker/mongo</span><br><span class="line">mkdir /docker/mongo/data</span><br></pre></td></tr></tbody></table></figure>
+
+<p>（2）安装最新版 mongodb</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --privileged=true -p 27017:27017 -v /docker/mongo/data:/data/db --name mongo mongo:latest</span><br></pre></td></tr></tbody></table></figure>
+
+<p>（3）进入 mongo 容器，进行简单设置</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it mongo bash</span><br><span class="line">mongo</span><br><span class="line">use admin</span><br><span class="line">db.createUser({ user: 'root', pwd: '你的密码', roles: [ { role: "userAdminAnyDatabase", db: "admin" } ] })</span><br><span class="line">//之后即可在连接工具输入相应参数连接</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="5-安装zookeeper"><a href="#5-安装zookeeper" class="headerlink" title="5.安装zookeeper"></a>5. 安装 zookeeper</h3><p>（1）创建文件夹和配置文件</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">mkdir /docker/zookeeper</span><br><span class="line">mkdir /docker/zookeeper/data</span><br><span class="line">vim /docker/zookeeper/zoo.cfg</span><br><span class="line">//将下面的内容输入到文件中</span><br><span class="line">clientPort=2181</span><br><span class="line">dataDir=/data</span><br><span class="line">dataLogDir=/datalog</span><br><span class="line">tickTime=2000</span><br><span class="line">initLimit=5</span><br><span class="line">syncLimit=2</span><br><span class="line">autopurge.snapRetainCount=3</span><br><span class="line">autopurge.purgeInterval=0</span><br><span class="line">maxClientCnxns=60</span><br></pre></td></tr></tbody></table></figure>
+
+<p>（2）安装 zookeeper</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --privileged=true -p 2181:2181 -v /docker/zookeeper/zoo.cfg:/conf/zoo.cfg -v /docker/zookeeper/data:/data --name zookeeper zookeeper:latest</span><br></pre></td></tr></tbody></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/docker/" rel="tag"># docker</a>
+              <a href="/tags/mysql/" rel="tag"># mysql</a>
+              <a href="/tags/rabbitmq/" rel="tag"># rabbitmq</a>
+              <a href="/tags/redis/" rel="tag"># redis</a>
+              <a href="/tags/zookeeper/" rel="tag"># zookeeper</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/2019/03/04/Redis%E4%B8%BB%E4%BB%8E%E6%90%AD%E5%BB%BA%E5%8F%8A%E9%85%8D%E7%BD%AE/" rel="next" title="Redis 主从搭建及配置">
+                  Redis 主从搭建及配置 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">皖ICP备19004913号-1 </a>
+  </div>
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dreamer</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">14k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">12 分钟</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js" integrity="sha256-EdPgYcPk/IIrw7FYeuJQexva49pVRZNmt3LculEr7zM=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.fantasydream.top","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.8.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="mybatis是我们开发中比较常用的orm框架，但它不像hibernate那样可以直接从数据库生成实体类，只能借助mybatis-generator这样的工具，还是有些不方便的。虽然IDEA的数据库工具可以生成实体类，但并不符合我们的需求，例如字段的属性都是基本类型，而不是包装类型，package是固定的等。而IDEA的生成工具使用groovy编写的脚本，并且能看到源码，这为我们编写自己的实体生成">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IDEA 编写 groovy 脚本生成实体类">
+<meta property="og:url" content="https://blog.fantasydream.top/2019/03/30/IDEA%E7%94%9F%E6%88%90%E5%AE%9E%E4%BD%93%E7%B1%BB/index.html">
+<meta property="og:site_name" content="Nier&#39;s Note">
+<meta property="og:description" content="mybatis是我们开发中比较常用的orm框架，但它不像hibernate那样可以直接从数据库生成实体类，只能借助mybatis-generator这样的工具，还是有些不方便的。虽然IDEA的数据库工具可以生成实体类，但并不符合我们的需求，例如字段的属性都是基本类型，而不是包装类型，package是固定的等。而IDEA的生成工具使用groovy编写的脚本，并且能看到源码，这为我们编写自己的实体生成">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://image.fantasydream.top/20190709091217.png">
+<meta property="og:image" content="http://image.fantasydream.top/20190709091234.png">
+<meta property="og:image" content="http://image.fantasydream.top/20190709091303.png">
+<meta property="og:image" content="http://image.fantasydream.top/20190709091337.png">
+<meta property="og:image" content="http://image.fantasydream.top/20190709091402.png">
+<meta property="article:published_time" content="2019-03-30T05:14:20.000Z">
+<meta property="article:modified_time" content="2020-11-24T05:12:45.353Z">
+<meta property="article:author" content="Dreamer">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://image.fantasydream.top/20190709091217.png">
+
+
+<link rel="canonical" href="https://blog.fantasydream.top/2019/03/30/IDEA%E7%94%9F%E6%88%90%E5%AE%9E%E4%BD%93%E7%B1%BB/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.fantasydream.top/2019/03/30/IDEA%E7%94%9F%E6%88%90%E5%AE%9E%E4%BD%93%E7%B1%BB/","path":"2019/03/30/IDEA生成实体类/","title":"IDEA 编写 groovy 脚本生成实体类"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>IDEA 编写 groovy 脚本生成实体类 | Nier's Note</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Nier's Note</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">For the Glory of Mankind</p>
+      <img class="custom-logo-image" src="/uploads/nier.png" alt="Nier's Note">
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%9C%A8IDEA%E4%B8%AD%E8%BF%9E%E6%8E%A5%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">1.</span> <span class="nav-text">一、在 IDEA 中连接数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%82%B9%E5%87%BBidea%E5%8F%B3%E4%BE%A7%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%93%E5%B7%A5%E5%85%B7-%E5%B9%B6%E7%82%B9%E5%87%BB-%E5%8F%B7"><span class="nav-number">1.1.</span> <span class="nav-text">1. 点击 idea 右侧的数据库工具，并点击 + 号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%80%89%E6%8B%A9mysql%E5%B9%B6%E5%9C%A8%E5%BC%B9%E5%87%BA%E7%9A%84%E7%AA%97%E5%8F%A3%E4%B8%AD%E5%A1%AB%E5%86%99%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E4%BF%A1%E6%81%AF"><span class="nav-number">1.2.</span> <span class="nav-text">2. 选择 mysql 并在弹出的窗口中填写数据库连接信息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E7%BC%96%E5%86%99%E8%84%9A%E6%9C%AC"><span class="nav-number">2.</span> <span class="nav-text">二、编写脚本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E8%B7%B3%E8%BD%AC%E5%88%B0%E8%84%9A%E6%9C%AC%E5%AD%98%E6%94%BE%E7%9A%84%E7%9B%AE%E5%BD%95"><span class="nav-number">2.1.</span> <span class="nav-text">1. 跳转到脚本存放的目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%BC%96%E5%86%99%E6%88%91%E4%BB%AC%E8%87%AA%E5%B7%B1%E7%9A%84groovy%E8%84%9A%E6%9C%AC"><span class="nav-number">2.2.</span> <span class="nav-text">2. 编写我们自己的 groovy 脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%9F%A5%E7%9C%8B%E6%95%88%E6%9E%9C"><span class="nav-number">2.3.</span> <span class="nav-text">3. 查看效果</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dreamer"
+      src="/uploads/me.jpg">
+  <p class="site-author-name" itemprop="name">Dreamer</p>
+  <div class="site-description" itemprop="description">Constant dropping wears the stone.</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.fantasydream.top/2019/03/30/IDEA%E7%94%9F%E6%88%90%E5%AE%9E%E4%BD%93%E7%B1%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/me.jpg">
+      <meta itemprop="name" content="Dreamer">
+      <meta itemprop="description" content="Constant dropping wears the stone.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nier's Note">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          IDEA 编写 groovy 脚本生成实体类
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-03-30 13:14:20" itemprop="dateCreated datePublished" datetime="2019-03-30T13:14:20+08:00">2019-03-30</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-11-24 13:12:45" itemprop="dateModified" datetime="2020-11-24T13:12:45+08:00">2020-11-24</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>5.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">mybatis是我们开发中比较常用的orm框架，但它不像hibernate那样可以直接从数据库生成实体类，只能借助mybatis-generator这样的工具，还是有些不方便的。虽然IDEA的数据库工具可以生成实体类，但并不符合我们的需求，例如字段的属性都是基本类型，而不是包装类型，package是固定的等。而IDEA的生成工具使用groovy编写的脚本，并且能看到源码，这为我们编写自己的实体生成工具提供了摸板。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="一、在IDEA中连接数据库"><a href="#一、在IDEA中连接数据库" class="headerlink" title="一、在IDEA中连接数据库"></a>一、在 IDEA 中连接数据库</h2><h3 id="1-点击idea右侧的数据库工具-并点击-号"><a href="#1-点击idea右侧的数据库工具-并点击-号" class="headerlink" title="1.点击idea右侧的数据库工具,并点击 + 号"></a>1. 点击 idea 右侧的数据库工具，并点击 + 号</h3><p><img src="http://image.fantasydream.top/20190709091217.png"></p>
+<h3 id="2-选择mysql并在弹出的窗口中填写数据库连接信息"><a href="#2-选择mysql并在弹出的窗口中填写数据库连接信息" class="headerlink" title="2.选择mysql并在弹出的窗口中填写数据库连接信息"></a>2. 选择 mysql 并在弹出的窗口中填写数据库连接信息</h3><p><img src="http://image.fantasydream.top/20190709091234.png"></p>
+<h2 id="二、编写脚本"><a href="#二、编写脚本" class="headerlink" title="二、编写脚本"></a>二、编写脚本</h2><h3 id="1-跳转到脚本存放的目录"><a href="#1-跳转到脚本存放的目录" class="headerlink" title="1.跳转到脚本存放的目录"></a>1. 跳转到脚本存放的目录</h3><p>在右侧数据库中随便右击一张表，按途中所示点击，点击后左侧项目会有一个高亮目录</p>
+<p><img src="http://image.fantasydream.top/20190709091303.png"></p>
+<h3 id="2-编写我们自己的groovy脚本"><a href="#2-编写我们自己的groovy脚本" class="headerlink" title="2.编写我们自己的groovy脚本"></a>2. 编写我们自己的 groovy 脚本</h3><p> 右击新建脚本，然后将下方代码复制进去，可根据自己需要修改</p>
+<figure class="highlight groovy"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.intellij.database.model.DasTable</span><br><span class="line"><span class="keyword">import</span> com.intellij.database.model.ObjectKind</span><br><span class="line"><span class="keyword">import</span> com.intellij.database.util.Case</span><br><span class="line"><span class="keyword">import</span> com.intellij.database.util.DasUtil</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.text.SimpleDateFormat</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Available context bindings:</span></span><br><span class="line"><span class="comment"> *   SELECTION   Iterable&lt;DasObject&gt;</span></span><br><span class="line"><span class="comment"> *   PROJECT     project</span></span><br><span class="line"><span class="comment"> *   FILES       files helper</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">packageName = <span class="string">""</span></span><br><span class="line">typeMapping = [</span><br><span class="line">        (<span class="regexp">~/(?i)tinyint|smallint|mediumint/</span>)      : <span class="string">"Integer"</span>,</span><br><span class="line">        (<span class="regexp">~/(?i)int/</span>)                             : <span class="string">"Long"</span>,</span><br><span class="line">        (<span class="regexp">~/(?i)bool|bit/</span>)                        : <span class="string">"Boolean"</span>,</span><br><span class="line">        (<span class="regexp">~/(?i)float|double|decimal|real/</span>)       : <span class="string">"Double"</span>,</span><br><span class="line">        (<span class="regexp">~/(?i)datetime|timestamp|date|time/</span>)    : <span class="string">"Date"</span>,</span><br><span class="line">        (<span class="regexp">~/(?i)blob|binary|bfile|clob|raw|image/</span>): <span class="string">"InputStream"</span>,</span><br><span class="line">        (<span class="regexp">~/(?i)/</span>)                                : <span class="string">"String"</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">FILES.chooseDirectoryAndSave(<span class="string">"Choose directory"</span>, <span class="string">"Choose where to store generated files"</span>) { dir -&gt;</span><br><span class="line">    SELECTION.filter { it <span class="keyword">instanceof</span> DasTable &amp;&amp; it.getKind() == ObjectKind.TABLE }.each { generate(it, dir) }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> generate(table, dir) {</span><br><span class="line">    <span class="keyword">def</span> className = javaClassName(table.getName(), <span class="literal">true</span>)</span><br><span class="line">    <span class="keyword">def</span> fields = calcFields(table)</span><br><span class="line">    packageName = getPackageName(dir)</span><br><span class="line">    PrintWriter printWriter = <span class="keyword">new</span> PrintWriter(<span class="keyword">new</span> OutputStreamWriter(<span class="keyword">new</span> FileOutputStream(<span class="keyword">new</span> File(dir, className + <span class="string">".java"</span>)), <span class="string">"UTF-8"</span>))</span><br><span class="line">    printWriter.withPrintWriter { out -&gt; generate(out, className, fields, table) }</span><br><span class="line"></span><br><span class="line"><span class="comment">//    new File(dir, className + ".java").withPrintWriter { out -&gt; generate(out, className, fields,table) }</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取包所在文件夹路径</span></span><br><span class="line"><span class="keyword">def</span> getPackageName(dir) {</span><br><span class="line">    <span class="keyword">return</span> dir.toString().replaceAll(<span class="string">"\\\\"</span>, <span class="string">"."</span>).replaceAll(<span class="string">"/"</span>, <span class="string">"."</span>).replaceAll(<span class="string">"^.*src(\\.main\\.java\\.)?"</span>, <span class="string">""</span>) + <span class="string">";"</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> generate(out, className, fields, table) {</span><br><span class="line">    out.println <span class="string">"package $packageName"</span></span><br><span class="line">    out.println <span class="string">""</span></span><br><span class="line">    out.println <span class="string">"import java.io.Serializable;"</span></span><br><span class="line">    out.println <span class="string">"import lombok.Getter;"</span></span><br><span class="line">    out.println <span class="string">"import lombok.Setter;"</span></span><br><span class="line">    out.println <span class="string">"import lombok.ToString;"</span></span><br><span class="line">    Set types = <span class="keyword">new</span> HashSet()</span><br><span class="line"></span><br><span class="line">    fields.each() {</span><br><span class="line">        types.add(it.type)</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (types.contains(<span class="string">"Date"</span>)) {</span><br><span class="line">        out.println <span class="string">"import java.util.Date;"</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    out.println <span class="string">""</span></span><br><span class="line">    out.println <span class="string">"/**\n"</span> +</span><br><span class="line">            <span class="string">" * @Description  \n"</span> +</span><br><span class="line">            <span class="string">" * @Author  Hunter\n"</span> +</span><br><span class="line">            <span class="string">" * @Date "</span> + <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd"</span>).format(<span class="keyword">new</span> Date()) + <span class="string">" \n"</span> +</span><br><span class="line">            <span class="string">" */"</span></span><br><span class="line">    out.println <span class="string">""</span></span><br><span class="line">    out.println <span class="string">"@Setter"</span></span><br><span class="line">    out.println <span class="string">"@Getter"</span></span><br><span class="line">    out.println <span class="string">"@ToString"</span></span><br><span class="line">    out.println <span class="string">"public class $className  implements Serializable {"</span></span><br><span class="line">    out.println <span class="string">""</span></span><br><span class="line">    out.println genSerialID()</span><br><span class="line">    fields.each() {</span><br><span class="line">        out.println <span class="string">""</span></span><br><span class="line">        <span class="comment">// 输出注释</span></span><br><span class="line">        <span class="keyword">if</span> (isNotEmpty(it.commoent)) {</span><br><span class="line">            out.println <span class="string">"\t/**"</span></span><br><span class="line">            out.println <span class="string">"\t * ${it.commoent.toString()}"</span></span><br><span class="line">            out.println <span class="string">"\t */"</span></span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 输出成员变量</span></span><br><span class="line">        out.println <span class="string">"\tprivate ${it.type} ${it.name};"</span></span><br><span class="line">    }</span><br><span class="line">    out.println <span class="string">""</span></span><br><span class="line">    out.println <span class="string">"}"</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> calcFields(table) {</span><br><span class="line">    DasUtil.getColumns(table).reduce([]) { fields, col -&gt;</span><br><span class="line">        <span class="keyword">def</span> spec = Case.LOWER.apply(col.getDataType().getSpecification())</span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> typeStr = typeMapping.find { p, t -&gt; p.matcher(spec).find() }.value</span><br><span class="line">        <span class="keyword">def</span> comm = [</span><br><span class="line">                <span class="attr">colName :</span> col.getName(),</span><br><span class="line">                <span class="attr">name    :</span> javaName(col.getName(), <span class="literal">false</span>),</span><br><span class="line">                <span class="attr">type    :</span> typeStr,</span><br><span class="line">                <span class="symbol">commoent:</span> col.getComment(),</span><br><span class="line">                <span class="attr">annos   :</span> <span class="string">"\t@Column(name = \""</span> + col.getName() + <span class="string">"\" )"</span>]</span><br><span class="line">        <span class="keyword">if</span> (<span class="string">"id"</span>.equals(Case.LOWER.apply(col.getName())))</span><br><span class="line">            comm.annos += [<span class="string">"@Id"</span>]</span><br><span class="line">        fields += [comm]</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 处理类名（这里是因为我的表都是以t_命名的，所以需要处理去掉生成类名时的开头的T，</span></span><br><span class="line"><span class="comment">// 如果你不需要那么请查找用到了 javaClassName这个方法的地方修改为 javaName 即可）</span></span><br><span class="line"><span class="keyword">def</span> javaClassName(str, capitalize) {</span><br><span class="line">    <span class="keyword">def</span> s = com.intellij.psi.codeStyle.NameUtil.splitNameIntoWords(str)</span><br><span class="line">            .collect { Case.LOWER.apply(it).capitalize() }</span><br><span class="line">            .join(<span class="string">""</span>)</span><br><span class="line">            .replaceAll(<span class="regexp">/[^\p{javaJavaIdentifierPart}[_]]/</span>, <span class="string">"_"</span>)</span><br><span class="line">    <span class="comment">// 去除开头的T  http://developer.51cto.com/art/200906/129168.htm</span></span><br><span class="line">    s = s[<span class="number">1.</span>.s.size() - <span class="number">1</span>]</span><br><span class="line">    capitalize || s.length() == <span class="number">1</span> ? s : Case.LOWER.apply(s[<span class="number">0</span>]) + s[<span class="number">1.</span>.<span class="number">-1</span>]</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> javaName(str, capitalize) {</span><br><span class="line">    <span class="keyword">def</span> s = com.intellij.psi.codeStyle.NameUtil.splitNameIntoWords(str)</span><br><span class="line">            .collect { Case.LOWER.apply(it).capitalize() }</span><br><span class="line">            .join(<span class="string">""</span>)</span><br><span class="line">            .replaceAll(<span class="regexp">/[^\p{javaJavaIdentifierPart}[_]]/</span>, <span class="string">"_"</span>)</span><br><span class="line">    capitalize || s.length() == <span class="number">1</span> ? s : Case.LOWER.apply(s[<span class="number">0</span>]) + s[<span class="number">1.</span>.<span class="number">-1</span>]</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> isNotEmpty(content) {</span><br><span class="line">    <span class="keyword">return</span> content != <span class="literal">null</span> &amp;&amp; content.toString().trim().length() &gt; <span class="number">0</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> String changeStyle(String str, <span class="keyword">boolean</span> toCamel) {</span><br><span class="line">    <span class="keyword">if</span> (!str || str.size() &lt;= <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> str</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (toCamel) {</span><br><span class="line">        String r = str.toLowerCase().split(<span class="string">'_'</span>).collect { cc -&gt; Case.LOWER.apply(cc).capitalize() }.join(<span class="string">''</span>)</span><br><span class="line">        <span class="keyword">return</span> r[<span class="number">0</span>].toLowerCase() + r[<span class="number">1.</span>.<span class="number">-1</span>]</span><br><span class="line">    } <span class="keyword">else</span> {</span><br><span class="line">        str = str[<span class="number">0</span>].toLowerCase() + str[<span class="number">1.</span>.<span class="number">-1</span>]</span><br><span class="line">        <span class="keyword">return</span> str.collect { cc -&gt; ((<span class="keyword">char</span>) cc).isUpperCase() ? <span class="string">'_'</span> + cc.toLowerCase() : cc }.join(<span class="string">''</span>)</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> String genSerialID() {</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"\tprivate static final long serialVersionUID =  "</span> + Math.abs(<span class="keyword">new</span> Random().nextLong()) + <span class="string">"L;"</span></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>保存</p>
+<h3 id="3-查看效果"><a href="#3-查看效果" class="headerlink" title="3.查看效果"></a>3. 查看效果</h3><p>此时再次右击表，就可看到我们的脚本了</p>
+<p><img src="http://image.fantasydream.top/20190709091337.png"></p>
+<p>生成的效果如下</p>
+<p><img src="http://image.fantasydream.top/20190709091402.png"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/03/06/CentOS7%E5%AE%89%E8%A3%85RabbitMQ/" rel="prev" title="CentOS7 安装 RabbitMQ">
+                  <i class="fa fa-chevron-left"></i> CentOS7 安装 RabbitMQ
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">皖ICP备19004913号-1 </a>
+  </div>
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dreamer</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">14k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">12 分钟</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js" integrity="sha256-EdPgYcPk/IIrw7FYeuJQexva49pVRZNmt3LculEr7zM=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

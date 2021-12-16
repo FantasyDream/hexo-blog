@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+    <url>
+        <loc>https://blog.fantasydream.top/tags/index.html</loc>
+    
+        <lastmod>2020-11-24</lastmod>
+    
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+  
+    <url>
+        <loc>https://blog.fantasydream.top/2019/03/04/Redis%E4%B8%BB%E4%BB%8E%E6%90%AD%E5%BB%BA%E5%8F%8A%E9%85%8D%E7%BD%AE/</loc>
+    
+        <lastmod>2020-11-24</lastmod>
+    
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+  
+    <url>
+        <loc>https://blog.fantasydream.top/categories/index.html</loc>
+    
+        <lastmod>2020-11-24</lastmod>
+    
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+  
+    <url>
+        <loc>https://blog.fantasydream.top/2019/03/06/CentOS7%E5%AE%89%E8%A3%85RabbitMQ/</loc>
+    
+        <lastmod>2020-11-24</lastmod>
+    
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+  
+    <url>
+        <loc>https://blog.fantasydream.top/2019/03/05/Docker%E9%85%8D%E7%BD%AEmysql%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/</loc>
+    
+        <lastmod>2020-11-24</lastmod>
+    
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+  
+    <url>
+        <loc>https://blog.fantasydream.top/2019/03/30/IDEA%E7%94%9F%E6%88%90%E5%AE%9E%E4%BD%93%E7%B1%BB/</loc>
+    
+        <lastmod>2020-11-24</lastmod>
+    
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+  
+    <url>
+        <loc>https://blog.fantasydream.top/2019/03/04/CentOS7%E5%AE%89%E8%A3%85Docker/</loc>
+    
+        <lastmod>2020-11-24</lastmod>
+    
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+  
+
+    <url>
+        <loc>https://blog.fantasydream.top/</loc>
+        <lastmod>2021-12-16</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+
+  
+    <url>
+        <loc>https://blog.fantasydream.top/tags/docker/</loc>
+        <lastmod>2021-12-16</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+  
+    <url>
+        <loc>https://blog.fantasydream.top/tags/mysql/</loc>
+        <lastmod>2021-12-16</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+  
+    <url>
+        <loc>https://blog.fantasydream.top/tags/rabbitmq/</loc>
+        <lastmod>2021-12-16</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+  
+    <url>
+        <loc>https://blog.fantasydream.top/tags/redis/</loc>
+        <lastmod>2021-12-16</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+  
+    <url>
+        <loc>https://blog.fantasydream.top/tags/zookeeper/</loc>
+        <lastmod>2021-12-16</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+  
+    <url>
+        <loc>https://blog.fantasydream.top/tags/Java/</loc>
+        <lastmod>2021-12-16</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+  
+
+  
+    <url>
+        <loc>https://blog.fantasydream.top/categories/Linux/</loc>
+        <lastmod>2021-12-16</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+  
+    <url>
+        <loc>https://blog.fantasydream.top/categories/Java/</loc>
+        <lastmod>2021-12-16</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+  
+</urlset>
