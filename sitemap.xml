@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
     <url>
-        <loc>https://blog.fantasydream.top/tags/index.html</loc>
+        <loc>https://fantasydream.github.io/hexo-blog/tags/index.html</loc>
     
         <lastmod>2020-11-24</lastmod>
     
@@ -11,7 +11,7 @@
     </url>
   
     <url>
-        <loc>https://blog.fantasydream.top/2019/03/04/Redis%E4%B8%BB%E4%BB%8E%E6%90%AD%E5%BB%BA%E5%8F%8A%E9%85%8D%E7%BD%AE/</loc>
+        <loc>https://fantasydream.github.io/hexo-blog/2019/03/04/Redis%E4%B8%BB%E4%BB%8E%E6%90%AD%E5%BB%BA%E5%8F%8A%E9%85%8D%E7%BD%AE/</loc>
     
         <lastmod>2020-11-24</lastmod>
     
@@ -20,7 +20,7 @@
     </url>
   
     <url>
-        <loc>https://blog.fantasydream.top/categories/index.html</loc>
+        <loc>https://fantasydream.github.io/hexo-blog/categories/index.html</loc>
     
         <lastmod>2020-11-24</lastmod>
     
@@ -29,7 +29,7 @@
     </url>
   
     <url>
-        <loc>https://blog.fantasydream.top/2019/03/06/CentOS7%E5%AE%89%E8%A3%85RabbitMQ/</loc>
+        <loc>https://fantasydream.github.io/hexo-blog/2019/03/06/CentOS7%E5%AE%89%E8%A3%85RabbitMQ/</loc>
     
         <lastmod>2020-11-24</lastmod>
     
@@ -38,7 +38,7 @@
     </url>
   
     <url>
-        <loc>https://blog.fantasydream.top/2019/03/05/Docker%E9%85%8D%E7%BD%AEmysql%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/</loc>
+        <loc>https://fantasydream.github.io/hexo-blog/2019/03/05/Docker%E9%85%8D%E7%BD%AEmysql%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/</loc>
     
         <lastmod>2020-11-24</lastmod>
     
@@ -47,7 +47,7 @@
     </url>
   
     <url>
-        <loc>https://blog.fantasydream.top/2019/03/30/IDEA%E7%94%9F%E6%88%90%E5%AE%9E%E4%BD%93%E7%B1%BB/</loc>
+        <loc>https://fantasydream.github.io/hexo-blog/2019/03/30/IDEA%E7%94%9F%E6%88%90%E5%AE%9E%E4%BD%93%E7%B1%BB/</loc>
     
         <lastmod>2020-11-24</lastmod>
     
@@ -56,7 +56,7 @@
     </url>
   
     <url>
-        <loc>https://blog.fantasydream.top/2019/03/04/CentOS7%E5%AE%89%E8%A3%85Docker/</loc>
+        <loc>https://fantasydream.github.io/hexo-blog/2019/03/04/CentOS7%E5%AE%89%E8%A3%85Docker/</loc>
     
         <lastmod>2020-11-24</lastmod>
     
@@ -66,7 +66,7 @@
   
 
     <url>
-        <loc>https://blog.fantasydream.top/</loc>
+        <loc>https://fantasydream.github.io/hexo-blog</loc>
         <lastmod>2021-12-16</lastmod>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
@@ -74,42 +74,42 @@
 
   
     <url>
-        <loc>https://blog.fantasydream.top/tags/docker/</loc>
+        <loc>https://fantasydream.github.io/hexo-blog/tags/docker/</loc>
         <lastmod>2021-12-16</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
   
     <url>
-        <loc>https://blog.fantasydream.top/tags/mysql/</loc>
+        <loc>https://fantasydream.github.io/hexo-blog/tags/mysql/</loc>
         <lastmod>2021-12-16</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
   
     <url>
-        <loc>https://blog.fantasydream.top/tags/rabbitmq/</loc>
+        <loc>https://fantasydream.github.io/hexo-blog/tags/rabbitmq/</loc>
         <lastmod>2021-12-16</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
   
     <url>
-        <loc>https://blog.fantasydream.top/tags/redis/</loc>
+        <loc>https://fantasydream.github.io/hexo-blog/tags/redis/</loc>
         <lastmod>2021-12-16</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
   
     <url>
-        <loc>https://blog.fantasydream.top/tags/zookeeper/</loc>
+        <loc>https://fantasydream.github.io/hexo-blog/tags/zookeeper/</loc>
         <lastmod>2021-12-16</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
   
     <url>
-        <loc>https://blog.fantasydream.top/tags/Java/</loc>
+        <loc>https://fantasydream.github.io/hexo-blog/tags/Java/</loc>
         <lastmod>2021-12-16</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
@@ -118,14 +118,14 @@
 
   
     <url>
-        <loc>https://blog.fantasydream.top/categories/Linux/</loc>
+        <loc>https://fantasydream.github.io/hexo-blog/categories/Linux/</loc>
         <lastmod>2021-12-16</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
   
     <url>
-        <loc>https://blog.fantasydream.top/categories/Java/</loc>
+        <loc>https://fantasydream.github.io/hexo-blog/categories/Java/</loc>
         <lastmod>2021-12-16</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>

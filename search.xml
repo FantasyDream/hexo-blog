@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>CentOS7 安装 Docker</title>
-    <url>/2019/03/04/CentOS7%E5%AE%89%E8%A3%85Docker/</url>
+    <url>/hexo-blog/2019/03/04/CentOS7%E5%AE%89%E8%A3%85Docker/</url>
     <content><![CDATA[<h2 id="一、安装docker"><a href="#一、安装docker" class="headerlink" title="一、安装docker"></a>一、安装 docker</h2><h3 id="1-检查内核版本"><a href="#1-检查内核版本" class="headerlink" title="1.检查内核版本"></a>1. 检查内核版本</h3><p>​    Docker 要求 Linux 系统的内核版本高于 3.10，所以安装前通过命令检查内核版本，命令如下</p>
 <figure class="highlight shell"><table><tbody><tr><td class="code"><pre><span class="line">uname -r </span><br></pre></td></tr></tbody></table></figure>
 
@@ -99,7 +99,7 @@
   </entry>
   <entry>
     <title>CentOS7 安装 RabbitMQ</title>
-    <url>/2019/03/06/CentOS7%E5%AE%89%E8%A3%85RabbitMQ/</url>
+    <url>/hexo-blog/2019/03/06/CentOS7%E5%AE%89%E8%A3%85RabbitMQ/</url>
     <content><![CDATA[<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p><a href="https://www.lanzous.com/i2ym3xe">https://www.lanzous.com/i2ym3xe</a></p>
 <p>下载后解压出两个文件，传到服务器上</p>
 <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight shell"><table><tbody><tr><td class="code"><pre><span class="line">yum install erlang-20.3.8.17-1.el6.x86_64.rpm</span><br><span class="line">yum installrabbitmq-server-3.7.10-1.el6.noarch.rpm</span><br></pre></td></tr></tbody></table></figure>
@@ -118,7 +118,7 @@
   </entry>
   <entry>
     <title>Docker 配置 mysql 主从复制</title>
-    <url>/2019/03/05/Docker%E9%85%8D%E7%BD%AEmysql%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/</url>
+    <url>/hexo-blog/2019/03/05/Docker%E9%85%8D%E7%BD%AEmysql%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/</url>
     <content><![CDATA[<h2 id="1-创建文件夹和配置文件"><a href="#1-创建文件夹和配置文件" class="headerlink" title="1.创建文件夹和配置文件"></a>1. 创建文件夹和配置文件</h2><p>(1) 创建主数据库文件夹及配置文件</p>
 <figure class="highlight sh"><table><tbody><tr><td class="code"><pre><span class="line">mkdir /docker</span><br><span class="line">mkdir /docker/mysql</span><br><span class="line">mkdir /docker/mysql/{master,slave}</span><br><span class="line">// 主库配置</span><br><span class="line">mkdir /docker/mysql/master/data</span><br><span class="line">mkdir /docker/mysql/master/mysql-files</span><br><span class="line">vim /docker/mysql/master/my.cnf</span><br><span class="line">// 下面的内容填入my.cnf</span><br><span class="line">[mysqld]</span><br><span class="line">user=mysql</span><br><span class="line">log-bin=mysql-bin</span><br><span class="line">server-id=11</span><br><span class="line">character-set-server=utf8</span><br><span class="line">default_authentication_plugin=mysql_native_password</span><br><span class="line">table_definition_cache=400</span><br><span class="line">[client]</span><br><span class="line">default-character-set=utf8</span><br><span class="line">[mysql]</span><br><span class="line">default-character-set=utf8</span><br></pre></td></tr></tbody></table></figure>
 
@@ -152,7 +152,7 @@
   </entry>
   <entry>
     <title>IDEA 编写 groovy 脚本生成实体类</title>
-    <url>/2019/03/30/IDEA%E7%94%9F%E6%88%90%E5%AE%9E%E4%BD%93%E7%B1%BB/</url>
+    <url>/hexo-blog/2019/03/30/IDEA%E7%94%9F%E6%88%90%E5%AE%9E%E4%BD%93%E7%B1%BB/</url>
     <content><![CDATA[<h2 id="一、在IDEA中连接数据库"><a href="#一、在IDEA中连接数据库" class="headerlink" title="一、在IDEA中连接数据库"></a>一、在 IDEA 中连接数据库</h2><h3 id="1-点击idea右侧的数据库工具-并点击-号"><a href="#1-点击idea右侧的数据库工具-并点击-号" class="headerlink" title="1.点击idea右侧的数据库工具,并点击 + 号"></a>1. 点击 idea 右侧的数据库工具，并点击 + 号</h3><p><img src="http://image.fantasydream.top/20190709091217.png"></p>
 <h3 id="2-选择mysql并在弹出的窗口中填写数据库连接信息"><a href="#2-选择mysql并在弹出的窗口中填写数据库连接信息" class="headerlink" title="2.选择mysql并在弹出的窗口中填写数据库连接信息"></a>2. 选择 mysql 并在弹出的窗口中填写数据库连接信息</h3><p><img src="http://image.fantasydream.top/20190709091234.png"></p>
 <h2 id="二、编写脚本"><a href="#二、编写脚本" class="headerlink" title="二、编写脚本"></a>二、编写脚本</h2><h3 id="1-跳转到脚本存放的目录"><a href="#1-跳转到脚本存放的目录" class="headerlink" title="1.跳转到脚本存放的目录"></a>1. 跳转到脚本存放的目录</h3><p>在右侧数据库中随便右击一张表，按途中所示点击，点击后左侧项目会有一个高亮目录</p>
@@ -175,7 +175,7 @@
   </entry>
   <entry>
     <title>Redis 主从搭建及配置</title>
-    <url>/2019/03/04/Redis%E4%B8%BB%E4%BB%8E%E6%90%AD%E5%BB%BA%E5%8F%8A%E9%85%8D%E7%BD%AE/</url>
+    <url>/hexo-blog/2019/03/04/Redis%E4%B8%BB%E4%BB%8E%E6%90%AD%E5%BB%BA%E5%8F%8A%E9%85%8D%E7%BD%AE/</url>
     <content><![CDATA[<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p>自己寻找要用的 redis 版本进行下载，我这边使用的是 3.2.9 版本</p>
 <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight sh"><table><tbody><tr><td class="code"><pre><span class="line">tar zxvf redis-3.2.9.tar.gz</span><br><span class="line">mkdir redis</span><br><span class="line">mv redis-3.2.9 /usr/<span class="built_in">local</span>/redis</span><br><span class="line">make</span><br><span class="line">make install</span><br><span class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/redis</span><br></pre></td></tr></tbody></table></figure>
 
