@@ -67,7 +67,7 @@
 
     <url>
         <loc>https://blog.fantasydream.top/</loc>
-        <lastmod>2021-12-17</lastmod>
+        <lastmod>2021-12-20</lastmod>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
@@ -75,42 +75,42 @@
   
     <url>
         <loc>https://blog.fantasydream.top/tags/docker/</loc>
-        <lastmod>2021-12-17</lastmod>
+        <lastmod>2021-12-20</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
   
     <url>
         <loc>https://blog.fantasydream.top/tags/mysql/</loc>
-        <lastmod>2021-12-17</lastmod>
+        <lastmod>2021-12-20</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
   
     <url>
         <loc>https://blog.fantasydream.top/tags/rabbitmq/</loc>
-        <lastmod>2021-12-17</lastmod>
+        <lastmod>2021-12-20</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
   
     <url>
         <loc>https://blog.fantasydream.top/tags/redis/</loc>
-        <lastmod>2021-12-17</lastmod>
+        <lastmod>2021-12-20</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
   
     <url>
         <loc>https://blog.fantasydream.top/tags/zookeeper/</loc>
-        <lastmod>2021-12-17</lastmod>
+        <lastmod>2021-12-20</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
   
     <url>
         <loc>https://blog.fantasydream.top/tags/Java/</loc>
-        <lastmod>2021-12-17</lastmod>
+        <lastmod>2021-12-20</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
@@ -119,14 +119,14 @@
   
     <url>
         <loc>https://blog.fantasydream.top/categories/Linux/</loc>
-        <lastmod>2021-12-17</lastmod>
+        <lastmod>2021-12-20</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
   
     <url>
         <loc>https://blog.fantasydream.top/categories/Java/</loc>
-        <lastmod>2021-12-17</lastmod>
+        <lastmod>2021-12-20</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
