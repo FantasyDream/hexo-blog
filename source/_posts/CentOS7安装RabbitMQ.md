@@ -2,9 +2,9 @@
 title: CentOS7安装RabbitMQ
 author: fantasydream
 date: 2019-03-06 14:37:00
-tags: 
+tags:
   - rabbitmq
-categories: 
+categories:
   - Linux
 description: RabbitMQ是由spring的开发团队Pivotal用erlang语言编写的一款消息队列。其功能丰富，支持很多插件，spring也对其无缝支持，可以很方便的在spring项目中使用该队列，所以很受市场欢迎。但其在centos上的安装还是有些复杂的，网上的教程也都不一样，我找到了一篇相对简单的安装流程，分享出来
 ---
@@ -42,4 +42,3 @@ rabbitmqctl set_permissions -p "/" admin ".*" ".*" ".*"
 浏览器访问 http://你的ip:15672
 
 输入admin 123456abc 即可访问
-

@@ -72,4 +72,3 @@ redis-cli -h 127.0.0.1 -p 26379 INFO Sentinel
 ```
 
 在两台redis服务器上都配置一下哨兵，其中配置信息中的 mymaster可以当成集群名来使用，用于tomcat session共享
-

@@ -70,7 +70,7 @@ creative_commons:
   post: false
   # You can set a language value if you prefer a translated version of CC license, e.g. deed.zh
   # CC licenses are available in 39 languages, you can find the specific and correct abbreviation you need on https://creativecommons.org
-  language: 
+  language:
 
 
 # ---------------------------------------------------------------
@@ -217,7 +217,7 @@ footer:
     # The full num of gongan beian.
     gongan_num:
     # The icon for gongan beian. See: http://www.beian.gov.cn/portal/download
-    gongan_icon_url: 
+    gongan_icon_url:
 
 
 # ---------------------------------------------------------------
@@ -358,11 +358,11 @@ codeblock:
   # Code Highlight theme
   # All available themes: https://theme-next.js.org/highlight/
   theme:
-    light: default
-    dark: tomorrow-night
+    light: github
+    dark: github-dark
   prism:
-    light: prism
-    dark: prism-dark
+    light: github
+    dark: github-dark
   # Add copy button on codeblock
   copy_button:
     enable: false

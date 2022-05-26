@@ -1,7 +1,7 @@
 ---
 title: Docker配置mysql主从复制
 date: 2019-03-05 14:46:22
-tags: 
+tags:
   - docker
   - mysql
 categories:
@@ -64,12 +64,15 @@ docker network create mysql
 ```
 
 ## 3.创建mysql容器
+
 创建mysql主数据库容器
 
 ```sh
 docker run -d --privileged=true -p 3306:3306 -v /docker/mysql/master/my.cnf:/etc/mysql/my.cnf -v /docker/mysql/master/data:/var/lib/mysql -v /docker/mysql/master/mysql-files:/var/lib/mysql-files -e MYSQL_ROOT_PASSWORD=123456 --name mysql-master --network mysql --network-alias mysql-master mysql:latest
 ```
+
 创建mysql从数据库容器
+
 ``` shell
 docker run -d --privileged=true -p 3307:3306 -v /docker/mysql/slave/my.cnf:/etc/mysql/my.cnf -v /docker/mysql/slave/data:/var/lib/mysql -v /docker/mysql/slave/mysql-files:/var/lib/mysql-files -e MYSQL_ROOT_PASSWORD=123456 --name mysql-slave --network mysql --network-alias mysql-slave mysql:latest
 ```

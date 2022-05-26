@@ -28,7 +28,7 @@ description: mybatis是我们开发中比较常用的orm框架，但它不像hib
 
 ### 2.编写我们自己的groovy脚本
 
- 右击新建脚本，然后将下方代码复制进去，可根据自己需要修改
+右击新建脚本，然后将下方代码复制进去，可根据自己需要修改
 
 ``` groovy
 import com.intellij.database.model.DasTable
@@ -191,4 +191,3 @@ static String genSerialID() {
 生成的效果如下
 
 ![](https://github-images.fantasydream.top/20190709091402.png)
-

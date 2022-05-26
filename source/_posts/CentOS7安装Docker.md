@@ -20,7 +20,7 @@ description: docker与微服务的相性让他们两个都发展迅速，现在�
 ​    Docker要求Linux系统的内核版本高于3.10，所以安装前通过命令检查内核版本, 命令如下
 
 ``` shell
-uname -r 
+uname -r
 ```
 
 ### 2.更新系统软件
@@ -28,7 +28,7 @@ uname -r
 ​    更新系统依赖包，以便于Docker的安装
 
 ``` shell
-sudo yum update 
+sudo yum update
 ```
 
 ### 3.卸载旧版本docker
@@ -82,7 +82,7 @@ docker images
 // 搜索软件镜像
 docker search 你要搜索的软件镜像名
 // 下载软件镜像,不加版本号则默认为最新版
-docker pull 镜像名:版本号 
+docker pull 镜像名:版本号
 // 将镜像启动为容器，部分参数在安装mysql时会解释
 docker run 镜像名或者镜像id
 // 容器的启动，停止，重启
@@ -110,17 +110,22 @@ docker rmi 镜像id
 （1）创建目录用于存储mysql的文件和配置
 
 创建文件夹
+
 ```shell
 mkdir /docker
 mkdir /docker/mysql
 mkdir /docker/mysql/data
 mkdir /docker/mysql/mysql-files //安装mysql8.0才需要这个文件夹，5.7不需要
 ```
+
 创建配置文件
+
 ```shell
 vim /docker/mysql/my.cnf
 ```
+
 编辑配置文件
+
 ``` shell
 [mysqld]
 user=mysql
@@ -162,7 +167,7 @@ docker run -d --privileged=true -p 3306:3306 -v /docker/mysql/my.cnf:/etc/mysql/
 
 ```shell
 docker exec -it mysql bash // mysql为镜像名，bash为进去要操作的见面
-mysql -u root -p 
+mysql -u root -p
 // 输入你设置的密码
 // 即可进入数据库
 // 也可以直接使用navicat等工具进行连接，记得ip填写你的服务器公网ip
@@ -179,7 +184,7 @@ wget https://raw.githubusercontent.com/antirez/redis/4.0/redis.conf -O /docker/r
 vim /docker/redis/redis.conf
 // 将"logfile "" " 改为 "logfile "access.log" "
 // 将"bind 127.0.0.1" 改为 "# bind 127.0.0.1"
-// 将"appendonly no" 改为 "appendonly yes" 
+// 将"appendonly no" 改为 "appendonly yes"
 // 将"# requirepass foobared" 改为 "requirepass 你的密码"
 // 修改后即可开启远程连接和密码验证
 ```
@@ -196,7 +201,7 @@ docker run -d --privileged=true -p 6379:6379 -v /docker/redis/redis.conf:/etc/re
 //进入容器内部
 docker exec -it redis bash
 // 连接redis
-redis-cli -h 127.0.0.1 -p 6379 -a 你的密码 
+redis-cli -h 127.0.0.1 -p 6379 -a 你的密码
 // 测试
 ping
 // 返回 pong 就成功了
@@ -281,4 +286,3 @@ maxClientCnxns=60
 ```shell
 docker run -d --privileged=true -p 2181:2181 -v /docker/zookeeper/zoo.cfg:/conf/zoo.cfg -v /docker/zookeeper/data:/data --name zookeeper zookeeper:latest
 ```
-
